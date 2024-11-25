@@ -1,0 +1,35 @@
+def robot_come_to_origin(moves):
+    """
+    Determines if a robot returns to the origin (0, 0) after a series of moves.
+
+    Moves are represented as a string containing:
+    - 'L': Move left (decreases x-coordinate)
+    - 'R': Move right (increases x-coordinate)
+    - 'U': Move up (increases y-coordinate)
+    - 'D': Move down (decreases y-coordinate)
+
+    Args:
+        moves (str): A string containing the sequence of moves.
+
+    Returns:
+        bool: True if the robot returns to the origin, False otherwise.
+    """
+    # Initialize starting position at the origin (0, 0)
+    x, y = 0, 0
+
+    # Iterate through each move in the sequence
+    for move in moves:
+        if move == 'L':  # Move left
+            x += 1
+        elif move == 'R':  # Move right
+            x -= 1
+        elif move == 'U':  # Move up
+            y += 1
+        elif move == 'D':  # Move down
+            y -= 1
+
+    # Check if the robot is back at the origin
+    return x == 0 and y == 0
+
+moves = input("Enter Moves: ").strip()
+robot_come_to_origin(moves)
