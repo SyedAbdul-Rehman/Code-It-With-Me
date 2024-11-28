@@ -1,0 +1,45 @@
+import requests  # Remember first install requests using "python -m pip install requests" by pasting this in terminal. Otherwise you'll face error
+
+# Replace with your OpenWeatherMap API key
+API_KEY = "cb964f56681f84d110ad198c9416a2ce"
+
+def get_city_name():
+    """Get the city name from the user with input validation."""
+    while True:
+        city = input("Enter the name of a city: ").strip()
+        if city:
+            return city
+        print("City name cannot be empty. Please try again.")
+
+def get_weather(city):
+    """Fetch weather data for a given city using OpenWeatherMap API."""
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
+    response = requests.get(url)
+    
+    if response.status_code == 200:  # Check if the request was successful
+        data = response.json()
+        temp = data["main"]["temp"]  # Extract temperature
+        description = data["weather"][0]["description"]  # Extract weather condition
+        return temp, description
+    else:
+        return None, None
+
+def display_weather(city, temp, description):
+    """Display the weather information in a readable format."""
+    if temp and description:
+        print("\nWeather Report:")
+        print(f"City: {city}")
+        print(f"Temperature: {temp}°C")
+        print(f"Condition: {description.capitalize()}")
+    else:
+        print("Sorry, could not retrieve weather data. Please check the city name or your internet connection.")
+
+def main():
+    """Main function to run the weather app."""
+    print("=== Welcome to the Weather App ===")
+    city = get_city_name()  # Get city name from user
+    temp, description = get_weather(city)  # Fetch weather data
+    display_weather(city, temp, description)  # Display the weather
+
+if __name__ == "__main__":
+    main()
