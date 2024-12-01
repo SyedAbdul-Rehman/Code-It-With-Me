@@ -34,6 +34,7 @@ def get_audio_url(youtube_url):
     return None
 
 # Function to play a song
+# Function to play a song with volume control
 def play_song(song):
     try:
         print("\nStarting the song...")
@@ -45,9 +46,14 @@ def play_song(song):
         player = vlc.MediaPlayer(url)  # Create a VLC media player instance
         player.play()  # Start playback
 
+        # Set an initial volume level
+        volume = 50
+        player.audio_set_volume(volume)
+        print(f"Volume set to {volume}%.")
+
         # Infinite loop to handle user controls
         while True:
-            print("\nControls: [P] Pause/Resume | [R] Restart | [Q] Quit")
+            print("\nControls: [P] Pause/Resume | [R] Restart | [Q] Quit | [+] Increase Volume | [-] Decrease Volume")
             command = input("Enter command: ").strip().lower()
 
             if command == "p":  # Pause or resume the music
@@ -61,10 +67,17 @@ def play_song(song):
                 player.stop()
                 player.play()
                 print("Music restarted.")
-            elif command == "q":  # Quit the player and return to main menu
+            elif command == "+":  # Increase volume
+                volume = min(100, volume + 10)  # Max volume is 100%
+                player.audio_set_volume(volume)
+                print(f"Volume increased to {volume}%.")
+            elif command == "-":  # Decrease volume
+                volume = max(0, volume - 10)  # Min volume is 0%
+                player.audio_set_volume(volume)
+                print(f"Volume decreased to {volume}%.")
+            elif command == "q":  # Quit the player and return to the main menu
                 player.stop()
                 print("Exiting player.")
-                main()
                 break
             else:
                 # Handle invalid commands
