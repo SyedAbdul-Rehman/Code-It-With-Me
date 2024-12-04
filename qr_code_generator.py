@@ -1,4 +1,5 @@
 import qrcode
+import os
 
 def generate_qr_terminal(data):
     """
@@ -19,10 +20,36 @@ def generate_qr_terminal(data):
         qr.make(fit=True)
         
         # Print the QR code in ASCII format
-        qr_ascii = qr.print_ascii(invert=True)
-        print("\nQR Code successfully generated and displayed in the terminal.")
+        qr.print_ascii(invert=True)
+        print("\nQR Code successfully displayed in the terminal.")
+        
+        return qr  # Return the QR code object for saving later
     except Exception as e:
         print(f"An error occurred while generating the QR code: {e}")
+        return None
+
+def save_qr_code(qr, data):
+    """
+    Saves the QR code as an image in a folder named 'qr_codes'.
+    :param qr: The QRCode object to save.
+    :param data: The data encoded in the QR code, used to create a filename.
+    """
+    try:
+        # Ensure the folder 'qr_codes' exists
+        folder_name = "qr_codes"
+        if not os.path.exists(folder_name):
+            os.makedirs(folder_name)
+
+        # Create a valid filename by replacing invalid characters
+        filename = f"{folder_name}/{data.replace(' ', '_').replace('/', '_')[:50]}.png"
+
+        # Save the QR code as an image
+        img = qr.make_image(fill_color="black", back_color="white")
+        img.save(filename)
+
+        print(f"QR Code saved as {filename}")
+    except Exception as e:
+        print(f"An error occurred while saving the QR code: {e}")
 
 def main():
     print("Welcome to the Terminal QR Code Generator!")
@@ -42,7 +69,16 @@ def main():
             
             print("\nHere is your QR Code:")
             # Generate and display the QR code in the terminal
-            generate_qr_terminal(data)
+            qr = generate_qr_terminal(data)
+
+            if qr:  # If the QR code was successfully generated
+                # Ask the user if they want to save the QR code
+                save_option = input("Do you want to save this QR code as an image file? (yes/no): ").strip().lower()
+                
+                if save_option == "yes":
+                    save_qr_code(qr, data)
+                else:
+                    print("QR code not saved.")
         
         except ValueError as ve:
             print(f"Error: {ve}")
@@ -50,4 +86,10 @@ def main():
             print(f"An unexpected error occurred: {e}")
 
 if __name__ == "__main__":
+    try:
+        from PIL import Image
+    except ImportError:
+        print("Pillow library is required to save QR codes as images. Please install it using 'pip install pillow'.")
+        exit()
+
     main()
