@@ -96,7 +96,7 @@ def main():
     user_id = input("Enter your user ID: ")
     recipient_number = input("Enter the recipient's WhatsApp number (with country code): ")
     message_content = input("Enter the message content: ")
-    scheduled_time = input("Enter the scheduled time (YYYY-MM-DD HH:MM:SS): ")
+    scheduled_time = input("Enter the scheduled time (YYYY-MM-DD HH:MM:SS) in 24-hours format: ")
     timezone_str = input("Enter your time zone (e.g., Asia/Karachi): ")
 
     # Schedule the message
